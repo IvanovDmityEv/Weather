@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherViewController: UIViewController {
 
@@ -40,14 +41,39 @@ class WeatherViewController: UIViewController {
         return textField
     }()
     
+    private let cityName: String
+    private let weatherViewModel = WeatherViewModel()
+    
+    init(cityName: String) {
+        self.cityName = cityName
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
 //MARK: - lifecycle func
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        bindWeatherViewModel()
     }
     
 //MARK: - flow funcs
+    
+    private func bindWeatherViewModel() {
+        weatherViewModel.weatherData = { [weak self] weatherModel in
+            DispatchQueue.main.async {
+                self?.temperatureLabel.text = String(weatherModel.temperature)
+                self?.city.text = weatherModel.cityName
+                self?.feelslikeTemperatureLabel.text = weatherModel.feelsLikeTemperatureString
+                self?.weatherIcon.image = UIImage(systemName: weatherModel.systemIconNameString)
+            }
+        }
+        weatherViewModel.fetchWeatherData(for: cityName)
+    }
     
     private func configureUI() {
         view.backgroundColor = .white
@@ -56,7 +82,6 @@ class WeatherViewController: UIViewController {
     }
     
     private func configureWeatherIcon() {
-        view.backgroundColor = .white
         view.addSubview(weatherIcon)
         weatherIcon.image = UIImage(systemName: .startWetherIcon)
         weatherIcon.tintColor = .darkGray
@@ -70,21 +95,15 @@ class WeatherViewController: UIViewController {
     }
     
     private func configureLabels() {
-        
-        //Заглушка
-        temperatureLabel.text = "30"
-        unitLabel.text = "°C"
-        feelslikeLabel.text = "Feels like"
-        feelslikeTemperatureLabel.text = "35"
-        city.text = "Moscow"
-
         temperatureLabel.font = UIFont(name: .fontName, size: CGFloat(.sizeTemperatureFont))
         temperatureLabel.textColor = .systemGray
         temperatureLabel.textAlignment = .center
+        temperatureLabel.text = .defoultTemperatureText
         
         unitLabel.font = UIFont(name: .fontName, size: CGFloat(.sizeTemperatureFont))
         unitLabel.textColor = .systemGray
         unitLabel.textAlignment = .center
+        unitLabel.text = .defoultUnit
         
         let stackTemperature = UIStackView()
         stackTemperature.axis = .horizontal
@@ -96,10 +115,12 @@ class WeatherViewController: UIViewController {
         feelslikeLabel.font = UIFont(name: .fontName, size: CGFloat(.sizeFeelslikeTemperatureFont))
         feelslikeLabel.textColor = .systemGray2
         feelslikeLabel.textAlignment = .left
+        feelslikeLabel.text = .defoultFeelslikeText
         
         feelslikeTemperatureLabel.font = UIFont(name: .fontName, size: CGFloat(.sizeFeelslikeTemperatureFont))
         feelslikeTemperatureLabel.textColor = .systemGray2
         feelslikeTemperatureLabel.textAlignment = .left
+        feelslikeTemperatureLabel.text = .defoultTemperatureText
         
         let stackFeelslikeTemperature = UIStackView()
         stackFeelslikeTemperature.axis = .horizontal
@@ -111,6 +132,7 @@ class WeatherViewController: UIViewController {
         city.font = UIFont(name: .fontName, size: CGFloat(.sizeCityFont))
         city.textColor = .systemGray4
         city.textAlignment = .left
+        city.text = .defoultCity
         
         let stackWeatherLabels = UIStackView()
         stackWeatherLabels.axis = .vertical

@@ -13,6 +13,10 @@ extension Double {
     static let widthFetchWeatherButton = 200.0
     static let heightCityTextField = 50.0
     
+    static let heightLocationWeatherButton = 50.0
+    static let widthLocationWeatherButton = 50.0
+//    static let constantLocationWeatherButton = 5.0
+    
     //Constraint
     static let universalConstraint = 20.0
     
@@ -21,12 +25,10 @@ extension Double {
     static let sizeFeelslikeTemperatureFont = 28.0
     static let sizeCityFont = 20.0
     
-    
     //Atributes
     static let alpha = 0.5
     
     //Image
     static let heightWeatherIcon = 200.0
     static let widthWeatherIcon = 200.0
-    
 }
