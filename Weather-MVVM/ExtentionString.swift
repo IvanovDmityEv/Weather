@@ -19,7 +19,7 @@ extension String {
     
     //Image
     static let imageBacground = "imageBacground"
-    static let startWetherIcon = "nosign"
+
     
     //Font
     static let fontName = "Futura Bold"
@@ -32,4 +32,20 @@ extension String {
     static let defoultFeelslikeText = "Feels like"
     static let defoultUnit = "°C"
     static let defoultCity = "Location"
+    
+    //Atribute
+    static let geocoderLocale = "en"
+    static let format = "%.1f"
+    static let domain = "Invalid URL"
+    
+    //SystemImage
+    
+    static let cloudBoltRain = "cloud.bolt.rain.fill"
+    static let cloudDrizzle = "cloud.drizzle.fill"
+    static let cloudRain = "cloud.rain.fill"
+    static let cloudSnow = "cloud.snow.fill"
+    static let smoke = "smoke.fill"
+    static let sun = "sun.min.fill"
+    static let cloud = "cloud.fill"
+    static let startWetherIcon = "nosign"
 }

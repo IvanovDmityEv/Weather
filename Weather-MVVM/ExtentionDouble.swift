@@ -15,7 +15,6 @@ extension Double {
     
     static let heightLocationWeatherButton = 50.0
     static let widthLocationWeatherButton = 50.0
-//    static let constantLocationWeatherButton = 5.0
     
     //Constraint
     static let universalConstraint = 20.0

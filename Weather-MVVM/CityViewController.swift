@@ -66,8 +66,6 @@ class CityViewController: UIViewController {
     }
     private func configureWeatherButton() {
         view.addSubview(fetchWeatherButton)
-        cityTextField.addSubview(locationWeatherButton)
-
         fetchWeatherButton.backgroundColor = .darkGray
         fetchWeatherButton.tintColor = .white
         fetchWeatherButton.layer.cornerRadius = CGFloat(.heightFetchWeatherButton)/2
@@ -75,26 +73,15 @@ class CityViewController: UIViewController {
         fetchWeatherButton.setTitle(.titleFetchWeatherButton, for: .normal)
         fetchWeatherButton.setImage(UIImage(systemName: .imageFetchWeatherButton), for: [])
         fetchWeatherButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        locationWeatherButton.tintColor = .systemGray2
-        locationWeatherButton.setImage(UIImage(systemName: .imageLocationWeatherButton), for: [])
-        locationWeatherButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             fetchWeatherButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             fetchWeatherButton.bottomAnchor.constraint(equalTo: imageWeather.topAnchor),
             fetchWeatherButton.heightAnchor.constraint(equalToConstant: CGFloat(.heightFetchWeatherButton)),
             fetchWeatherButton.widthAnchor.constraint(equalToConstant: CGFloat(.widthFetchWeatherButton)),
-            
-            locationWeatherButton.trailingAnchor.constraint(equalTo: cityTextField.trailingAnchor),
-            locationWeatherButton.centerYAnchor.constraint(equalTo: cityTextField.centerYAnchor),
-            locationWeatherButton.heightAnchor.constraint(equalToConstant: CGFloat(.heightLocationWeatherButton)),
-            locationWeatherButton.widthAnchor.constraint(equalToConstant: CGFloat(.widthLocationWeatherButton)),
     ])
         
         fetchWeatherButton.addTarget(self, action: #selector(self.fetchWeather(_:)), for: .touchUpInside)
-        
-        locationWeatherButton.addTarget(self, action: #selector(self.useCurrentLocation(_:)), for: .touchUpInside)
     }
     
     private func configureCityTextField() {
@@ -106,16 +93,35 @@ class CityViewController: UIViewController {
         cityTextField.autocorrectionType = .no
         cityTextField.delegate = self
         
+        let paddingView = UIView()
+        cityTextField.addSubview(paddingView)
+        cityTextField.rightView = paddingView
+        cityTextField.rightViewMode = .always
+        paddingView.addSubview(locationWeatherButton)
+        
+        locationWeatherButton.tintColor = .systemGray2
+        locationWeatherButton.setImage(UIImage(systemName: .imageLocationWeatherButton), for: [])
+        locationWeatherButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             cityTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             cityTextField.bottomAnchor.constraint(equalTo: fetchWeatherButton.topAnchor, constant: -CGFloat(.universalConstraint)),
             cityTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(.universalConstraint)),
             cityTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -CGFloat(.universalConstraint)),
-            cityTextField.heightAnchor.constraint(equalToConstant: CGFloat(.heightCityTextField))
-    ])
+            cityTextField.heightAnchor.constraint(equalToConstant: CGFloat(.heightCityTextField)),
+   
+            paddingView.trailingAnchor.constraint(equalTo: cityTextField.trailingAnchor),
+            paddingView.heightAnchor.constraint(equalToConstant: CGFloat(.heightCityTextField)),
+            paddingView.widthAnchor.constraint(equalToConstant: CGFloat(.heightCityTextField)),
+            
+            locationWeatherButton.trailingAnchor.constraint(equalTo: paddingView.trailingAnchor),
+            locationWeatherButton.centerYAnchor.constraint(equalTo: paddingView.centerYAnchor),
+            locationWeatherButton.heightAnchor.constraint(equalToConstant: CGFloat(.heightLocationWeatherButton)),
+            locationWeatherButton.widthAnchor.constraint(equalToConstant: CGFloat(.widthLocationWeatherButton)),
+        ])
+        
+        locationWeatherButton.addTarget(self, action: #selector(self.useCurrentLocation(_:)), for: .touchUpInside)
     }
-    
-
     
     @IBAction func fetchWeather(_ fetchWeatherButton: UIButton) {
         if let city = cityTextField.text, !city.isEmpty {
@@ -134,7 +140,7 @@ extension CityViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             let geocoder = CLGeocoder()
-            let geocoderLocale = Locale(identifier: "en")
+            let geocoderLocale = Locale(identifier: .geocoderLocale)
             geocoder.reverseGeocodeLocation(location, preferredLocale: geocoderLocale) { [weak self] plasemarks, error in
                 if let plasemark = plasemarks?.first {
                     DispatchQueue.main.async {
