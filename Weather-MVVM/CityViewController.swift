@@ -98,6 +98,7 @@ class CityViewController: UIViewController {
         cityTextField.rightView = paddingView
         cityTextField.rightViewMode = .always
         paddingView.addSubview(locationWeatherButton)
+        paddingView.translatesAutoresizingMaskIntoConstraints = false
         
         locationWeatherButton.tintColor = .systemGray2
         locationWeatherButton.setImage(UIImage(systemName: .imageLocationWeatherButton), for: [])
@@ -113,7 +114,7 @@ class CityViewController: UIViewController {
             paddingView.trailingAnchor.constraint(equalTo: cityTextField.trailingAnchor),
             paddingView.heightAnchor.constraint(equalToConstant: CGFloat(.heightCityTextField)),
             paddingView.widthAnchor.constraint(equalToConstant: CGFloat(.heightCityTextField)),
-            
+
             locationWeatherButton.trailingAnchor.constraint(equalTo: paddingView.trailingAnchor),
             locationWeatherButton.centerYAnchor.constraint(equalTo: paddingView.centerYAnchor),
             locationWeatherButton.heightAnchor.constraint(equalToConstant: CGFloat(.heightLocationWeatherButton)),
